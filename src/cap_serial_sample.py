@@ -5,7 +5,9 @@ import serial
 
 def main():
 
-  with serial.Serial('/dev/tty.usbserial-FT2J6I04',38400,timeout=0.05) as ser:
+  _serial_device_port = '/dev/tty.usbserial-FT2J6I04' #使用製品が確定したら書き直す
+
+  with serial.Serial(_serial_device_port,38400,timeout=0.05) as ser:
     _evt = {
         'original':{  # 制御装置から送られてくる電文
           b'R00\r':"stop",
