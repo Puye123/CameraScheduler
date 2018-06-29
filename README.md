@@ -13,7 +13,7 @@ CameraScheduler
 
 ## Requirement
 ### gphoto2
-http://www.gphoto.org
+http://www.gphoto.org  
 このスクリプトはgphoto2のコマンドを利用しています
 
 ### Equipment
