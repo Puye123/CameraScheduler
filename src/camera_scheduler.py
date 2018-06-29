@@ -63,7 +63,7 @@ def shot_and_download(dir_name: str, file_name: str):
 def connect_cam():
     """ カメラと接続する
     """
-    print_timestamp("shot_and_download")
+    print_timestamp("connect_cam")
 
     connect_cmd = ['bash', 'cam_connect.sh']
     try:
@@ -96,11 +96,11 @@ def schedule_run():
     dir_name = make_unique_name_directory()
     image_save_dir_path = '../sandbox'
 
-    s.enter(1,  1, connect_cam)
-    s.enter(5,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + dir_name + '.jpg'})
-    s.enter(10, 2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
-    s.enter(15, 2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + dir_name + '.jpg'})
-    s.enter(20, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
+    s.enter(1,   1, connect_cam)
+    s.enter(20,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + dir_name + '.jpg'})
+    s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
+    s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + dir_name + '.jpg'})
+    s.enter(105, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
     print_timestamp("run!!")
     s.run()
 
