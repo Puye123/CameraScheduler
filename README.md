@@ -30,10 +30,20 @@ macOS High Sierra ver. 10.13.5
 
 ## Usage
 ```
+$ python3 camera_scheduler.py
+```
+または
+```
 $ python camera_scheduler.py
 ```
 
 ## Install
+### python
+#### mac
+ターミナルで以下を実行
+```
+$ brew install python3
+```
 ### gphoto2
 #### mac
 ターミナルで以下を実行
