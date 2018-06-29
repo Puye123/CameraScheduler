@@ -79,7 +79,7 @@ def schedule_run():
     print_timestamp("schedule_run")
     s = sched.scheduler(time.time, time.sleep)
     dir_name = make_unique_name_directory()
-    print("schedule_run start")
+    
     s.enter(1,  1, connect_cam)
     s.enter(5,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + dir_name + '.jpg'})
     s.enter(10, 2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
