@@ -42,7 +42,9 @@ def main():
         print( _evt['judge' ][ go_cmd ] )
         # do something
         if _evt['judge'][go_cmd] == "normal start":
+          ser.close()
           schedule_run()
+          ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
 
       else:
         print( 'unknown command' )
