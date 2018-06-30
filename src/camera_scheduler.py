@@ -88,6 +88,18 @@ def move_dir(dir_name: str, dst_path: str):
         exit()
 
 
+def time_adjustment():
+    """ 時刻合わせ実行
+    """
+    print_timestamp("time_adjustment")
+    time_adj_cmd = ['sudo', 'ntpdate', '-B', 'ntp.nict.jp']
+    try:
+        res = subprocess.check_call(time_adj_cmd)
+    except:
+        print("Time Adjustment Error")
+        exit()
+
+
 def schedule_run():
     """ スケジューラ実行時から指定した時間後に登録した関数を実行する
     """
@@ -101,6 +113,7 @@ def schedule_run():
     s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
     s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + dir_name + '.jpg'})
     s.enter(105, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
+    s.enter(110, 3, time_adjustment)
     print_timestamp("run!!")
     s.run()
 
@@ -108,6 +121,7 @@ def schedule_run():
 def main():
     print_timestamp("main")
     schedule_run()
+
 
 if __name__ == "__main__":
     main()
