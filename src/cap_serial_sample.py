@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import serial
+from camera_scheduler import schedule_run
 
 def main():
 
@@ -40,6 +41,9 @@ def main():
       if go_cmd in _evt['judge']:
         print( _evt['judge' ][ go_cmd ] )
         # do something
+        if _evt['judge'][go_cmd] == "normal start":
+          schedule_run()
+
       else:
         print( 'unknown command' )
 
