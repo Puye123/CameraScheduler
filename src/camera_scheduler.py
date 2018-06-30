@@ -58,6 +58,7 @@ def shot_and_download(dir_name: str, file_name: str):
         res = subprocess.check_call(shot_cmd)
     except:
         print("CalledProcessError")
+        connect_cam()
 
 
 def connect_cam():
