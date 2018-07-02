@@ -60,6 +60,22 @@ def shot_and_download(dir_name: str, file_name: str):
         print("CalledProcessError")
         connect_cam()
 
+def shot_and_download2(dir_name: str):
+    """ 撮影とダウンロードを実行する
+    
+    Arguments:
+        dir_name {str} -- 保存先ディレクトリ名 (カレントディレクトリ下のディレクトリ)
+        file_name {str} -- 画像名
+    """
+    print_timestamp("shot_and_download")
+    
+    shot_cmd = ['bash', 'cam_shot.sh', dir_name + '/' + file_name]
+    try:
+        res = subprocess.check_call(shot_cmd)
+    except:
+        print("CalledProcessError")
+        connect_cam()
+
 
 def connect_cam():
     """ カメラと接続する
@@ -69,8 +85,8 @@ def connect_cam():
     connect_cmd = ['bash', 'cam_connect.sh']
     try:
         res = subprocess.check_call(connect_cmd)
-    except:
-        print("CalledProcessError")
+    except Exception as ex:
+        print(ex)
         exit()
 
 
@@ -82,12 +98,23 @@ def move_dir(dir_name: str, dst_path: str):
         dst_path {str} -- 移動先のパス
     """
     print_timestamp("move_dir")
+    cmd = ['mv', dir_name + "/", dst_path + '/']
+    try:
+        print_timestamp("move: stert")
+        res = subprocess.check_call(cmd)
+        print_timestamp("move: end")
+        
+    except:
+        print("Time Adjustment Error")
+        exit()
+    """
     try:
         shutil.move("./" + dir_name, dst_path + '/' + dir_name)
-    except:
+    except Exception as ex:
+        print (ex)
         print("Directory Move Error")
         exit()
-
+    """
 
 def time_adjustment():
     """ 時刻合わせ実行
@@ -107,14 +134,17 @@ def schedule_run():
     print_timestamp("schedule_run")
     s = sched.scheduler(time.time, time.sleep)
     dir_name = make_unique_name_directory()
-    image_save_dir_path = '../sandbox'
+    image_save_dir_path = '/Volumes/share'
+
+    date = datetime.datetime.now()
+    pic_name = date.strftime('%H%M%S')
 
     s.enter(1,   1, connect_cam)
-    s.enter(20,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + dir_name + '.jpg'})
-    s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
-    s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + dir_name + '.jpg'})
-    s.enter(105, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
-    s.enter(110, 3, time_adjustment)
+    s.enter(5,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + pic_name + '.jpg'})
+    s.enter(10,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + pic_name + '.jpg'})
+    s.enter(15,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + pic_name + '.jpg'})
+    s.enter(20, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
+    s.enter(25, 3, time_adjustment)
     print_timestamp("run!!")
     s.run()
 

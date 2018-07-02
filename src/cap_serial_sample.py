@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import serial
-from camera_scheduler import schedule_run
+from camera_scheduler import schedule_run, print_timestamp
 
 def main():
 
-  _serial_device_port = '/dev/tty.usbserial-FT2J6I04' #使用製品が確定したら書き直す
+  print_timestamp("START")
+  #_serial_device_port = '/dev/tty.usbserial-FT2J6I04' #使用製品が確定したら書き直す
+  _serial_device_port = '/dev/tty.usbserial-FT2GFQB6'
 
   with serial.Serial(_serial_device_port,38400,timeout=0.05) as ser:
     _evt = {
@@ -27,27 +29,26 @@ def main():
         }
 
     cur_cmd  = b''
+    _SHOOT_FLG = b'R01'
 
     while True:
       line = ser.readline()
-      cur_cmd += line
+      cur_cmd = line
+      go_cmd = cur_cmd.rstrip()
 
-      if b'\r' in cur_cmd:
-        go_cmd = cur_cmd.split('\r')[0]
-        cur_cmd = cur_cmd.split('\r')[1]
-      else:
-        continue
-
-      if go_cmd in _evt['judge']:
-        print( _evt['judge' ][ go_cmd ] )
+      if go_cmd  in _evt['judge']:
+        print_timestamp(_evt['judge' ][ go_cmd ])
         # do something
         if _evt['judge'][go_cmd] == "normal start":
           ser.close()
           schedule_run()
           ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
-
+      
       else:
-        print( 'unknown command' )
+        pass
+        #print( 'unknown command' )
+ 
+
 
 if __name__ == "__main__":
     main()
