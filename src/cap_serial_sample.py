@@ -22,7 +22,7 @@ def main():
         'judge':{  # 動作判定用の文言
           b'R00':"stop",
           b'R01':"normal start",
-          b'R02':"event no 2",
+          b'R02':"normal start",
           b'R03':"event no 3",
           b'R09':"Black screen",
           }
