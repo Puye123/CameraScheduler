@@ -81,37 +81,28 @@ def move_dir(dir_name: str, dst_path: str):
         dst_path {str} -- 移動先のパス
     """
     print_timestamp("move_dir")
-    cmd = ['cp', '-r', dir_name, dst_path + "/" + dir_name]
-    #cmd = ['rsync', '-av', dir_name, dst_path]
-    try:
-        print_timestamp("copy: stert")
-        res = subprocess.call(cmd)
-        print_timestamp("copy: end")
-        
-    except:
-        print("Time Adjustment Error")
-        #exit()
-    """
-    time.sleep(10)
+    
+    # 所定回数まではコピーが成功するまでretryする
+    RETRY_COUNT = 10
+    for i in range(0, RETRY_COUNT):
+        try:
+            shutil.copytree('./' + dir_name, dst_path + '/' + dir_name)
+            break
+        except Exception as ex:
+            print (ex)
+            print("[Warn] Cannot copy: Retry...")
+            # コピー先のディレクトリを削除して次のリトライ処理に備える
+            if os.path.exists(dst_path + '/' + dir_name):
+                try:
+                    shutil.rmtree(dst_path + '/' + dir_name)
+                except Exception as ex:
+                    print (ex)
 
-    cmd = ['rm', '-r', dir_name + "/"]
     try:
-        print_timestamp("rm: stert")
-        res = subprocess.check_call(cmd)
-        print_timestamp("rm: end")
-        
-    except:
-        print("Time Adjustment Error")
-        #exit()
-    """
-    """
-    try:
-        shutil.move("./" + dir_name, dst_path + '/' + dir_name)
+        shutil.rmtree('./' + dir_name)
     except Exception as ex:
         print (ex)
-        print("Directory Move Error")
-        exit()
-    """
+
 
 def time_adjustment():
     """ 時刻合わせ実行
@@ -131,15 +122,15 @@ def schedule_run():
     print_timestamp("schedule_run")
     s = sched.scheduler(time.time, time.sleep)
     dir_name = make_unique_name_directory()
-    image_save_dir_path = '/Volumes/share'
+    image_save_dir_path = '../sandbox'
 
     date = datetime.datetime.now()
     pic_name = date.strftime('%H%M%S')
 
     s.enter(1,   1, connect_cam)
-    s.enter(20,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + pic_name + '.jpg'})
-    s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + pic_name + '.jpg'})
-    s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + pic_name + '.jpg'})
+    s.enter(20,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_01_' + dir_name + '.jpg'})
+    s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_02_' + dir_name + '.jpg'})
+    s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_name':'pic_03_' + dir_name + '.jpg'})
     s.enter(105, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
     s.enter(110, 3, time_adjustment)
     print_timestamp("run!!")
