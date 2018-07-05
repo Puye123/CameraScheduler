@@ -15,14 +15,14 @@ def main():
         'original':{  # 制御装置から送られてくる電文
           b'R00\r':"stop",
           b'R01\r':"normal start",
-          b'R02\r':"event no 2",
+          b'R02\r':"short version",
           b'R03\r':"event no 3",
           b'R09\r':"Black screen",
           },
         'judge':{  # 動作判定用の文言
           b'R00':"stop",
           b'R01':"normal start",
-          b'R02':"normal start",
+          b'R02':"short version",
           b'R03':"event no 3",
           b'R09':"Black screen",
           }
@@ -41,12 +41,15 @@ def main():
         # do something
         if _evt['judge'][go_cmd] == "normal start":
           ser.close()
-          schedule_run()
+          schedule_run([20, 44, 97])
+          ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
+        elif _evt['judge'][go_cmd] == "short version":
+          ser.close()
+          schedule_run([10, 20, 30])
           ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
       
       else:
         pass
-        #print( 'unknown command' )
  
 
 
