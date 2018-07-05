@@ -118,27 +118,41 @@ def time_adjustment():
         #exit()
 
 
-def schedule_run():
+def schedule_run(shot_times):
     """ スケジューラ実行時から指定した時間後に登録した関数を実行する
+    
+    Arguments:
+        shot_times -- 撮影タイミング（秒）
     """
+    
     print_timestamp("schedule_run")
+    if len(shot_times) == 0:
+        print("invalid param: shot_times is empty")
+        return
+
     s = sched.scheduler(time.time, time.sleep)
     dir_name = make_unique_name_directory()
     image_save_dir_path = '../sandbox'
 
-    s.enter(1,   1, connect_cam)
-    s.enter(20,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_prefix':'pic_01_'})
-    s.enter(44,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_prefix':'pic_02_'})
-    s.enter(97,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_prefix':'pic_03_'})
-    s.enter(105, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
-    s.enter(110, 3, time_adjustment)
+    s.enter(1, 1, connect_cam)
+
+    count = 1
+    for shot_time in shot_times:
+        s.enter(shot_time,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_prefix':'pic_' + str(count) + '_'})
+        count += 1
+    
+    move_dir_time = max(shot_times) + 3
+    s.enter(move_dir_time, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
+
+    time_adjustment_time = move_dir_time + 3
+    s.enter(time_adjustment_time, 3, time_adjustment)
     print_timestamp("run!!")
     s.run()
 
 
 def main():
     print_timestamp("main")
-    schedule_run()
+    schedule_run([3, 6, 9])
 
 
 if __name__ == "__main__":
