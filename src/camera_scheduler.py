@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import env
 import datetime
 import os
 import subprocess
@@ -85,8 +86,7 @@ def move_dir(dir_name: str, dst_path: str):
     print_timestamp("move_dir")
     
     # 所定回数まではコピーが成功するまでretryする
-    RETRY_COUNT = 10
-    for i in range(0, RETRY_COUNT):
+    for i in range(0, env.COPY_RETRY_COUNT):
         try:
             shutil.copytree('./' + dir_name, dst_path + '/' + dir_name)
             break
@@ -141,10 +141,10 @@ def schedule_run(shot_times):
         s.enter(shot_time,  2, shot_and_download, kwargs={'dir_name':dir_name, 'file_prefix':'pic_' + str(count) + '_'})
         count += 1
     
-    move_dir_time = max(shot_times) + 3
+    move_dir_time = max(shot_times) + env.OFFSET_DIRECTORY_MOVE
     s.enter(move_dir_time, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
 
-    time_adjustment_time = move_dir_time + 3
+    time_adjustment_time = move_dir_time + env.OFFSET_TIME_ADJUST
     s.enter(time_adjustment_time, 3, time_adjustment)
     print_timestamp("run!!")
     s.run()
@@ -152,7 +152,7 @@ def schedule_run(shot_times):
 
 def main():
     print_timestamp("main")
-    schedule_run([3, 6, 9])
+    schedule_run(env.TEST_SHOT_TIMES)
 
 
 if __name__ == "__main__":
