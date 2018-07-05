@@ -29,5 +29,5 @@ SERIAL_TIME_OUT = 0.05
 COPY_RETRY_COUNT = 10
 
 # テスト撮影用の撮影タイミング
-TEST_SHOT_TIMES = [3, 6, 9]
+TEST_SHOT_TIMES = [5, 10, 15]
 

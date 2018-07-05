@@ -132,7 +132,6 @@ def schedule_run(shot_times):
 
     s = sched.scheduler(time.time, time.sleep)
     dir_name = make_unique_name_directory()
-    image_save_dir_path = '../sandbox'
 
     s.enter(1, 1, connect_cam)
 
@@ -142,7 +141,7 @@ def schedule_run(shot_times):
         count += 1
     
     move_dir_time = max(shot_times) + env.OFFSET_DIRECTORY_MOVE
-    s.enter(move_dir_time, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': image_save_dir_path})
+    s.enter(move_dir_time, 2, move_dir, kwargs={'dir_name': dir_name, 'dst_path': env.IMAGE_SAVE_DIR_PATH})
 
     time_adjustment_time = move_dir_time + env.OFFSET_TIME_ADJUST
     s.enter(time_adjustment_time, 3, time_adjustment)
