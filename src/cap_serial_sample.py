@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import serial
+import env
 from camera_scheduler import schedule_run, print_timestamp
 
 def main():
 
   print_timestamp("START")
   #_serial_device_port = '/dev/tty.usbserial-FT2J6I04' #使用製品が確定したら書き直す
-  _serial_device_port = '/dev/tty.usbserial-FT2GFQB6'
+  _serial_device_port = env.USB_SERIAL_PORT
 
-  with serial.Serial(_serial_device_port,38400,timeout=0.05) as ser:
+  with serial.Serial(_serial_device_port,env.SERIAL_BAUD_RATE,timeout=env.SERIAL_TIME_OUT) as ser:
     _evt = {
         'original':{  # 制御装置から送られてくる電文
           b'R00\r':"stop",
@@ -41,12 +42,12 @@ def main():
         # do something
         if _evt['judge'][go_cmd] == "normal start":
           ser.close()
-          schedule_run([20, 44, 97])
-          ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
+          schedule_run(env.NORMAL_CONTENT_SHOT_TIMES)
+          ser = serial.Serial(_serial_device_port,env.SERIAL_BAUD_RATE,timeout=env.SERIAL_TIME_OUT)
         elif _evt['judge'][go_cmd] == "short version":
           ser.close()
-          schedule_run([10, 20, 30])
-          ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
+          schedule_run(env.SHORT_CONTENT_SHOT_TIMES)
+          ser = serial.Serial(_serial_device_port,env.SERIAL_BAUD_RATE,timeout=env.SERIAL_TIME_OUT)
       
       else:
         pass
