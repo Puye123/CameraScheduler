@@ -3,12 +3,13 @@
 
 import serial
 from camera_scheduler import schedule_run, print_timestamp
+from env import *
 
 def main():
 
   print_timestamp("START")
   #_serial_device_port = '/dev/tty.usbserial-FT2J6I04' #使用製品が確定したら書き直す
-  _serial_device_port = '/dev/tty.usbserial-FT2GFQB6'
+  _serial_device_port = USB_SERIAL_PORT
 
   with serial.Serial(_serial_device_port,38400,timeout=0.05) as ser:
     _evt = {
@@ -43,11 +44,11 @@ def main():
           ser.close()
           schedule_run()
           ser = serial.Serial(_serial_device_port,38400,timeout=0.05)
-      
+
       else:
         pass
         #print( 'unknown command' )
- 
+
 
 
 if __name__ == "__main__":
