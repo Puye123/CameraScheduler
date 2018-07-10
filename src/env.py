@@ -14,10 +14,12 @@ OFFSET_DIRECTORY_MOVE = 5
 OFFSET_TIME_ADJUST = 5
 
 # 画像の保存先パス
-IMAGE_SAVE_DIR_PATH = '../sandbox'
+#IMAGE_SAVE_DIR_PATH = '../sandbox'
+IMAGE_SAVE_DIR_PATH = '/home/techlab/repo/ex-techlab-a-ss18-photo/cam_folder'
 
 # USBシリアルポートのパス
-USB_SERIAL_PORT = '/dev/tty.usbserial-FT2GFQB6'
+#USB_SERIAL_PORT = '/dev/tty.usbserial-FT2GFQB6'
+USB_SERIAL_PORT = '/dev/ttyS0'
 
 # シリアル通信のボーレート
 SERIAL_BAUD_RATE = 38400
