@@ -2,7 +2,7 @@
 Description=ride photo watch service
 
 [Service]
-ExecStart=/home/techlab/repo/CameraScheduler/src/cap_serial_sample.py
+ExecStart=/home/techlab/repo/CameraScheduler/src/cam_scheduler_service/camscheduler_systemd.sh
 Restart=always
 RestartSec=30
 WorkingDirectory=/home/techlab/repo/CameraScheduler/src
