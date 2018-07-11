@@ -5,7 +5,7 @@ Description=ride photo watch service
 ExecStart=/home/techlab/repo/CameraScheduler/src/cap_serial_sample.py
 Restart=always
 RestartSec=30
-WorkingDirectory=/home/techlab/repo/ex-techlab-a-ss18-photo/src
+WorkingDirectory=/home/techlab/repo/CameraScheduler/src
 User=techlab
 Type=simple
 
