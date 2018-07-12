@@ -4,7 +4,9 @@
 import serial
 import env
 from camera_scheduler import schedule_run, print_timestamp
+from pysyslog import make_logger
 
+make_logger("cam_serial")
 def main():
 
   print_timestamp("START")
@@ -44,11 +46,12 @@ def main():
           ser.close()
           schedule_run(env.NORMAL_CONTENT_SHOT_TIMES)
           ser = serial.Serial(_serial_device_port,env.SERIAL_BAUD_RATE,timeout=env.SERIAL_TIME_OUT)
+          logger.info("start serial : %s"$(go_cmd))
         elif _evt['judge'][go_cmd] == "short version":
           ser.close()
           schedule_run(env.SHORT_CONTENT_SHOT_TIMES)
           ser = serial.Serial(_serial_device_port,env.SERIAL_BAUD_RATE,timeout=env.SERIAL_TIME_OUT)
-      
+          logger.info("start serial : %s"$(go_cmd))
       else:
         pass
  
