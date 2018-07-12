@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # 通常コンテンツの撮影タイミング(秒)
-NORMAL_CONTENT_SHOT_TIMES = [20, 44, 97]
+NORMAL_CONTENT_SHOT_TIMES = [31, 55, 94]
 
 # ショートコンテンツの撮影タイミング(秒)
-SHORT_CONTENT_SHOT_TIMES = [10, 20, 30]
+SHORT_CONTENT_SHOT_TIMES = [6, 20, 27]
 
 # 最後の１枚の撮影開始時刻からディレクトリ移動開始時刻の時間(秒)
 OFFSET_DIRECTORY_MOVE = 5
