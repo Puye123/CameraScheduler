@@ -7,7 +7,10 @@ import subprocess
 import sched
 import time
 import shutil
+from pysyslog import make_logger
 
+
+logger = make_logger("camshedule")
 def get_unique_name(date: datetime.datetime):
     """時刻から一意に識別可能な文字列を生成する
     
@@ -40,9 +43,10 @@ def print_timestamp(module_name:str):
     Arguments:
         module_name {str} -- 関数名など
     """
-    print("===== ", module_name, " =====")
-    date = datetime.datetime.now()
-    print(date)
+    #print("===== ", module_name, " =====")
+    #date = datetime.datetime.now()
+    #print(date)
+    logger.info("start %s"%( module_name ))
 
 
 def shot_and_download(dir_name: str, file_prefix: str):
@@ -52,7 +56,8 @@ def shot_and_download(dir_name: str, file_prefix: str):
         dir_name {str} -- 保存先ディレクトリ名 (カレントディレクトリ下のディレクトリ)
         file_name {str} -- 画像プレフィックス名
     """
-    print_timestamp("shot_and_download")
+    #print_timestamp("shot_and_download")
+    logger.info("shot_and_download")
 
     pic_name = get_unique_name(datetime.datetime.now())
     
@@ -60,20 +65,22 @@ def shot_and_download(dir_name: str, file_prefix: str):
     try:
         res = subprocess.check_call(shot_cmd)
     except:
-        print("CalledProcessError")
+        logger.error("CalledProcessError")
         connect_cam()
 
 
 def connect_cam():
     """ カメラと接続する
     """
-    print_timestamp("connect_cam")
+    #print_timestamp("connect_cam")
+    logger.info("connect_cam")
+
 
     connect_cmd = ['bash', 'cam_connect.sh']
     try:
         res = subprocess.check_call(connect_cmd)
     except Exception as ex:
-        print(ex)
+        logger.error(ex)
         #exit()
 
 def move_dir(dir_name: str, dst_path: str):
@@ -83,7 +90,9 @@ def move_dir(dir_name: str, dst_path: str):
         dir_name {str} -- ディレクトリ名
         dst_path {str} -- 移動先のパス
     """
-    print_timestamp("move_dir")
+    #print_timestamp("move_dir")
+    logger.info("move_dir")
+
     
     # 所定回数まではコピーが成功するまでretryする
     for i in range(0, env.COPY_RETRY_COUNT):
@@ -91,30 +100,31 @@ def move_dir(dir_name: str, dst_path: str):
             shutil.copytree('./' + dir_name, dst_path + '/' + dir_name)
             break
         except Exception as ex:
-            print (ex)
-            print("[Warn] Cannot copy: Retry...")
+            logger.error (ex)
+            logger.error("[Warn] Cannot copy: Retry...")
             # コピー先のディレクトリを削除して次のリトライ処理に備える
             if os.path.exists(dst_path + '/' + dir_name):
                 try:
                     shutil.rmtree(dst_path + '/' + dir_name)
                 except Exception as ex:
-                    print (ex)
+                    logger.error(ex)
 
     try:
         shutil.rmtree('./' + dir_name)
     except Exception as ex:
-        print (ex)
+        logger.error(ex)
 
 
 def time_adjustment():
     """ 時刻合わせ実行
     """
-    print_timestamp("time_adjustment")
+    #print_timestamp("time_adjustment")
+    logger.info("time_adjustment")
     time_adj_cmd = ['sudo', 'ntpdate', '-B', 'ntp.nict.jp']
     try:
         res = subprocess.check_call(time_adj_cmd)
     except:
-        print("Time Adjustment Error")
+        logger.error("Time Adjustment Error")
         #exit()
 
 
@@ -125,9 +135,10 @@ def schedule_run(shot_times):
         shot_times -- 撮影タイミング（秒）
     """
     
-    print_timestamp("schedule_run")
+    #print_timestamp("schedule_run")
+    logger.info("schedule_run")
     if len(shot_times) == 0:
-        print("invalid param: shot_times is empty")
+        logger.error("invalid param: shot_times is empty")
         return
 
     s = sched.scheduler(time.time, time.sleep)
@@ -145,12 +156,13 @@ def schedule_run(shot_times):
 
     time_adjustment_time = move_dir_time + env.OFFSET_TIME_ADJUST
     s.enter(time_adjustment_time, 3, time_adjustment)
-    print_timestamp("run!!")
+    #print_timestamp("run!!")
+    logger.info("run!!")
     s.run()
 
 
 def main():
-    print_timestamp("main")
+    logger.info("main loop start")
     schedule_run(env.TEST_SHOT_TIMES)
 
 
