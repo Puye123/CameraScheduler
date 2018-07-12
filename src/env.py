@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # 通常コンテンツの撮影タイミング(秒)
-NORMAL_CONTENT_SHOT_TIMES = [30, 54, 108]
+NORMAL_CONTENT_SHOT_TIMES = [15, 54, 108]
 
 # ショートコンテンツの撮影タイミング(秒)
 SHORT_CONTENT_SHOT_TIMES = [6, 20, 27]
