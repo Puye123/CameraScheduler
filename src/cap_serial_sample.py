@@ -18,14 +18,14 @@ def main():
         'original':{  # 制御装置から送られてくる電文
           b'R00\r':"stop",
           b'R01\r':"normal start",
-          b'R02\r':"event no 2",
+          b'R02\r':"normal start",
           b'R03\r':"short version",
           b'R09\r':"Black screen",
           },
         'judge':{  # 動作判定用の文言
           b'R00':"stop",
           b'R01':"normal start",
-          b'R02':"event no 2",
+          b'R02':"normal start",
           b'R03':"short version",
           b'R09':"Black screen",
           }
